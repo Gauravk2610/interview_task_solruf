@@ -2,8 +2,9 @@ import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { Link } from 'react-router-dom'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 // import { useSetRecoilState } from 'recoil';
 // import { userState } from '../atoms/userAtom';
 
@@ -21,6 +22,19 @@ const Login = () => {
     const handlChange = (event) => {
         setValues({...values, [event.target.name]: event.target.value})
     }
+
+    const adduserData = async(user) => {
+        console.log(user, "user")
+        const docRef = await setDoc(doc(db, 'users', user.uid), {
+            firstname: '',
+            lastname: '',
+            displayName: user.displayName,
+            id: user.uid,
+            photoURL: user.photoURL,
+            timestamp: serverTimestamp(),
+            date: new Date().toDateString()
+        })
+      }
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -52,6 +66,8 @@ const Login = () => {
                 const token = credential.accessToken;
                 // The signed-in user info.
                 const user = result.user;
+                console.log("user")
+                adduserData(user)
 
                 // ...
             }).catch((error) => {

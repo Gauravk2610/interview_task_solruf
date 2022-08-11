@@ -101,19 +101,7 @@ const Register = () => {
                 const token = credential.accessToken;
                 // The signed-in user info.
                 const user = result.user;
-                setDoc(doc( db,'users', user.uid), {
-                    firstname: user.displayName,
-                    lastname: values.lastname,
-                    displayName: user.displayName,
-                    id: user.uid,
-                    photoURL: user.photoURL,
-                    timestamp: serverTimestamp(),
-                    date: new Date().toDateString()
-                }).then(() => {
-                    console.log("User Added to Db")
-                }).catch((error) => {
-                    alert(error.message)
-                })
+                adduserData(user)
                 // ...
             }).catch((error) => {
                 // Handle Errors here.
